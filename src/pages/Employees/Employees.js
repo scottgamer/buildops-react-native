@@ -63,7 +63,7 @@ const Employees = () => {
       };
 
       const response = await axios.post(
-        `http://192.168.100.107:4000/graphql`,
+        `http://192.168.1.140:4000/graphql`,
         JSON.stringify(requestBody),
         {
           headers: {
@@ -90,20 +90,32 @@ const Employees = () => {
     }
   };
 
+  const openEmployeeDetailsHandler = index => {
+    console.log(index);
+    // props.navigation.navigate("EmployeeDetails");
+  };
+
   const renderEmployee = ({ item, index }) => {
     console.log("item", item);
     console.log();
+
     return (
-      <View>
-        <Text>
-          {item.firstname} {item.lastname}
-        </Text>
-        <Text>{item.skills[0].name}</Text>
-        <Text>
-          {item.addresses[0].line1} & {item.addresses[0].line2},{" "}
-          {item.addresses[0].city}, {item.addresses[0].state}
-        </Text>
-      </View>
+      // <TouchableOpacity
+      //   onPress={() => {
+      //     openEmployeeDetailsHandler(index);
+      //   }}
+      // >
+        <View style={styles.employeeContainer}>
+          <Text style={styles.employeeHeader}>
+            {item.firstname} {item.lastname}
+          </Text>
+          <Text>{item.skills[0].name}</Text>
+          <Text>
+            {item.addresses[0].line1} & {item.addresses[0].line2},{" "}
+            {item.addresses[0].city}, {item.addresses[0].state}
+          </Text>
+        </View>
+      // </TouchableOpacity>
     );
   };
 
@@ -112,13 +124,15 @@ const Employees = () => {
       <View style={styles.container}>
         <Text style={styles.containerHeader}>List of Employees</Text>
         <Button style={styles.buttonAdd} title="Add an Employee" />
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={employees.employees}
-          keyExtractor={employee => employee._id}
-          contentContainerStyle={styles.listLayout}
-          renderItem={renderEmployee}
-        />
+        <View style={{ flex: 1, backgroundColor: "#fefefe" }}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={employees.employees}
+            keyExtractor={employee => employee._id}
+            contentContainerStyle={styles.listLayout}
+            renderItem={renderEmployee}
+          />
+        </View>
       </View>
       <Separator />
     </SafeAreaView>
@@ -146,19 +160,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "500"
   },
+  employeeHeader: {
+    color: "#5101d1",
+    fontWeight: "600"
+  },
   listLayout: {
     padding: 10,
     marginTop: 10
   },
-  cardContainer: {
+  employeeContainer: {
     flex: 1,
-    flexDirection: "row",
     width: "100%",
-    height: 110,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 5,
-    marginBottom: 15,
+    height: 90,
+    padding: 8,
+    marginBottom: 10,
     borderRadius: 3,
     borderColor: "black",
     backgroundColor: "#fff",
