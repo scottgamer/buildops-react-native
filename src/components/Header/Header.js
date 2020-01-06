@@ -1,10 +1,10 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Platform } from "react-native";
 
-const Header = () => {
+const Header = props => {
   return (
     <View style={styles.header}>
-      <Text style={styles.headerTitle}></Text>
+      <Text style={styles.headerTitle}>{props.title}</Text>
     </View>
   );
 };
@@ -16,11 +16,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 90,
     paddingTop: 36,
-    backgroundColor: "#f7287b",
+    backgroundColor: Platform.OS === "android" ? "#5101d1" : "#fefefe",
     alignItems: "center"
   },
   headerTitle: {
-    color: "black",
-    fontSize: 18
+    color: Platform.OS === "android" ? "#fefefe" : "#5101d1",
+    fontSize: 20,
+    fontWeight: "bold"
   }
 });
