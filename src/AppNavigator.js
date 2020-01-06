@@ -1,29 +1,26 @@
-// import { createStackNavigator } from "react-navigation-stack";
-// import { createAppContainer } from "react-navigation";
+import React from "react";
+import { createStackNavigator } from "react-navigation-stack";
+import { createAppContainer } from "react-navigation";
 
-// import EmployeesList from "./components/EmployeesList";
-// // import SitesDetails from "./components/SiteDetails";
+import Employees from "./pages/Employees/Employees";
+import Header from "./components/Header/Header";
 
-// const NavigationStack = createStackNavigator(
-//   {
-//     EmployeesList: {
-//       screen: EmployeesList,
-//       navigationOptions: {
-//         header: null
-//       }
-//     },
-//     // SitesDetails: {
-//     //   screen: SitesDetails,
-//     //   navigationOptions: {
-//     //     header: null
-//     //   }
-//     // }
-//   },
-//   {
-//     initialRouteName: "EmployeesList"
-//   }
-// );
+const NavigationStack = createStackNavigator(
+  {
+    Employees: {
+      screen: Employees,
+      navigationOptions: {
+        header: () => {
+          return <Header title="BuildOps" />;
+        }
+      }
+    }
+  },
+  {
+    initialRouteName: "Employees"
+  }
+);
 
-// const AppNavigator = createAppContainer(NavigationStack);
+const AppNavigator = createAppContainer(NavigationStack);
 
-// export default AppNavigator;
+export default AppNavigator;
