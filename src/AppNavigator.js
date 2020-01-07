@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 
-import Employees from "./pages/Employees/Employees";
+import Employees from "./screens/Employees/Employees";
 import EmployeeDetails from "./components/Employees/EmployeeList/EmployeeDetails";
 import Header from "./components/Header/Header";
 

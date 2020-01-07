@@ -105,7 +105,7 @@ const Employees = () => {
       //     openEmployeeDetailsHandler(index);
       //   }}
       // >
-        <View style={styles.employeeContainer}>
+        <View style={styles.employeeCard}>
           <Text style={styles.employeeHeader}>
             {item.firstname} {item.lastname}
           </Text>
@@ -131,6 +131,7 @@ const Employees = () => {
             keyExtractor={employee => employee._id}
             contentContainerStyle={styles.listLayout}
             renderItem={renderEmployee}
+            extraData={employees.employees}
           />
         </View>
       </View>
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 10
   },
-  employeeContainer: {
+  employeeCard: {
     flex: 1,
     width: "100%",
     height: 90,
