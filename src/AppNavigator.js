@@ -17,14 +17,14 @@ const NavigationStack = createStackNavigator(
         }
       }
     },
-    // EmployeeDetails: {
-    //   screen: EmployeeDetails,
-    //   navigationOptions: {
-    //     header: () => {
-    //       return <Header title="BuildOps" />;
-    //     }
-    //   }
-    // },
+    EmployeeDetails: {
+      screen: EmployeeDetails,
+      navigationOptions: {
+        header: () => {
+          return <Header title="BuildOps" />;
+        }
+      }
+    },
     EmployeeForm: {
       screen: EmployeeForm,
       navigationOptions: {
@@ -35,7 +35,7 @@ const NavigationStack = createStackNavigator(
     }
   },
   {
-    initialRouteName: "EmployeeForm"
+    initialRouteName: "Employees"
   }
 );
 
