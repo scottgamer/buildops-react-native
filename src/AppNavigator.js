@@ -4,6 +4,7 @@ import { createAppContainer } from "react-navigation";
 
 import Employees from "./screens/Employees/Employees";
 import EmployeeDetails from "./components/Employees/EmployeeList/EmployeeDetails";
+import EmployeeForm from "./components/Employees/EmployeeForm/EmployeeForm";
 import Header from "./components/Header/Header";
 
 const NavigationStack = createStackNavigator(
@@ -23,10 +24,18 @@ const NavigationStack = createStackNavigator(
     //       return <Header title="BuildOps" />;
     //     }
     //   }
-    // }
+    // },
+    EmployeeForm: {
+      screen: EmployeeForm,
+      navigationOptions: {
+        header: () => {
+          return <Header title="BuildOps" />;
+        }
+      }
+    }
   },
   {
-    initialRouteName: "Employees"
+    initialRouteName: "EmployeeForm"
   }
 );
 

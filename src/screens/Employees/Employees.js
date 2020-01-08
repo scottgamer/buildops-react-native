@@ -63,7 +63,7 @@ const Employees = () => {
       };
 
       const response = await axios.post(
-        `http://192.168.1.140:4000/graphql`,
+        `http://192.168.100.107:4000/graphql`,
         JSON.stringify(requestBody),
         {
           headers: {
