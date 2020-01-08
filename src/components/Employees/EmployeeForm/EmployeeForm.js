@@ -9,7 +9,8 @@ import {
 } from "react-native";
 import { Formik } from "formik";
 
-const EmployeeForm = () => {
+const EmployeeForm = props => {
+  console.log("State in employee form", props.navigation.state);
   const initialValues = {
     firstname: "",
     lastname: "",
@@ -28,7 +29,10 @@ const EmployeeForm = () => {
     >
       {({ handleChange, handleBlur, handleSubmit, values }) => (
         <React.Fragment>
-          <ScrollView showsVerticalScrollIndicator style={{ flex: 1, backgroundColor: "#fff" }}>
+          <ScrollView
+            showsVerticalScrollIndicator
+            style={{ flex: 1, backgroundColor: "#fff" }}
+          >
             <View style={styles.container}>
               <Text style={styles.containerHeader}>Add Employee</Text>
               <Text style={{ color: "red", fontWeight: "400" }}>
