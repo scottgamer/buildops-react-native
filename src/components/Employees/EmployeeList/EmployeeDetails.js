@@ -8,14 +8,11 @@ import {
   Button
 } from "react-native";
 
+import axios from "axios";
 import { Formik } from "formik";
 import EmployeeSchema from "../../../schemas/EmployeeSchema";
 
 const EmployeeDetails = props => {
-  console.log(
-    "Current employe in form",
-    props.navigation.state.params.employee
-  );
   const [isEditable, setEditable] = useState(false);
   const [employee, setEmployee] = useState({
     ...props.navigation.state.params.employee
@@ -36,6 +33,51 @@ const EmployeeDetails = props => {
   const updateEmployeeHandler = (event, employeeId) => {
     event.preventDefault();
     console.log(employeeId);
+  };
+
+  const deleteEmployeHandler = async () => {
+    try {
+      console.log(employee);
+
+      const requestBody = {
+        query: `
+          mutation {
+            deleteEmployee(employeeId: "${employee._id}") {
+              _id
+              firstname
+              lastname 
+            }
+          }
+        `
+      };
+
+      const response = await axios.post(
+        `http://192.168.1.140:4000/graphql`,
+        JSON.stringify(requestBody),
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      if (response.status !== 200 && response.status !== 201) {
+        throw new Error("Failed!");
+      }
+
+      props.navigation.goBack();
+
+      // const deletedEmployeeId = response.data.data.deleteEmployee._id;
+      // const currentEmployees = employees.employees;
+
+      // const updatedEmployees = currentEmployees.filter(e => {
+      //   return e._id !== deletedEmployeeId;
+      // });
+
+      // setEmployees({ ...employees, employees: updatedEmployees });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // useEffect(() => {
@@ -193,14 +235,13 @@ const EmployeeDetails = props => {
                       marginTop: 10
                     }}
                   >
+                    <Button onPress={handleSubmit} title="Update" />
                     <Button
-                      onPress={handleSubmit}
-                      title="Update"
-                      disabled={true}
+                      color="red"
+                      onPress={deleteEmployeHandler}
+                      title="Delete"
                     />
-                    <Button color="red" onPress={handleSubmit} title="Delete" />
                   </View>
-
                 </View>
               </View>
             </ScrollView>

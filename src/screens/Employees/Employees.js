@@ -15,55 +15,62 @@ import { Spinner } from "react-native-ui-kitten";
 
 import axios from "axios";
 
-const Employees = () => {
+const Employees = props => {
   const [employees, setEmployees] = useState({
     employees: [],
     selectedEmployee: null
   });
 
+  // let refresh = false;
+  // if (props.navigation.state.params && props.navigation.state.params.refresh) {
+  //   refresh = props.navigation.state.params.refresh;
+  // }
+  // console.log("navigation state", props.navigation.state);
+  // console.log("refresh", refresh);
+
+  // const refresh = props.navigation.state.params.employees ??
+
   const [isActive, setActive] = useState(true);
   const [isLoading, setLoading] = useState(true);
-  const [isLoadingMore, setLoadingMore] = useState(false);
-
-  const [isCreating, setCreating] = useState(false);
-  const [isDeleting, setDeleting] = useState(false);
-  const [isUpdating, setUpdating] = useState(false);
+  const [count, setCount] = useState(1);
 
   useEffect(() => {
     fetchEmployees();
     setActive(false);
-  }, []);
+    // setCount(1);
+    // refresh = false;
+  }, [count]);
 
   const fetchEmployees = async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
 
       const requestBody = {
         query: `
-          query {
-            employees {
-              _id
-              firstname
-              lastname 
-              addresses {
+            query {
+              employees {
                 _id
-                line1
-                line2
-                city
-                state
-                zipcode
-              }
-              skills {
-                _id
-                name
+                firstname
+                lastname 
+                addresses {
+                  _id
+                  line1
+                  line2
+                  city
+                  state
+                  zipcode
+                }
+                skills {
+                  _id
+                  name
+                }
               }
             }
-          }
-        `
+          `
       };
 
       const response = await axios.post(
-        `http://192.168.100.107:4000/graphql`,
+        `http://192.168.1.140:4000/graphql`,
         JSON.stringify(requestBody),
         {
           headers: {
@@ -80,31 +87,35 @@ const Employees = () => {
 
       if (isActive) {
         setEmployees({ ...employees, employees: employeesRes });
-        setLoading(false);
+        // setLoading(false);
       }
     } catch (error) {
       console.log(error);
       if (isActive) {
-        setLoading(false);
+        // setLoading(false);
       }
     }
   };
 
-  const openEmployeeDetailsHandler = index => {
-    console.log(index);
-    // props.navigation.navigate("EmployeeDetails");
+  const openEmployeeFormHandler = () => {
+    props.navigation.navigate("EmployeeForm", {
+      employees: employees.employees
+    });
+  };
+
+  const openEmployeeDetailsHandler = (item, index) => {
+    props.navigation.navigate("EmployeeDetails", {
+      employee: item
+    });
   };
 
   const renderEmployee = ({ item, index }) => {
-    console.log("item", item);
-    console.log();
-
     return (
-      // <TouchableOpacity
-      //   onPress={() => {
-      //     openEmployeeDetailsHandler(index);
-      //   }}
-      // >
+      <TouchableOpacity
+        onPress={() => {
+          openEmployeeDetailsHandler(item, index);
+        }}
+      >
         <View style={styles.employeeCard}>
           <Text style={styles.employeeHeader}>
             {item.firstname} {item.lastname}
@@ -115,15 +126,30 @@ const Employees = () => {
             {item.addresses[0].city}, {item.addresses[0].state}
           </Text>
         </View>
-      // </TouchableOpacity>
+      </TouchableOpacity>
     );
+  };
+
+  const reloadHandler = async () => {
+    await fetchEmployees();
+    console.log(count);
+    setCount(count + 1);
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={styles.container}>
         <Text style={styles.containerHeader}>List of Employees</Text>
-        <Button style={styles.buttonAdd} title="Add an Employee" />
+        <Button
+          style={styles.buttonAdd}
+          title="Reload list"
+          onPress={reloadHandler}
+        />
+        <Button
+          style={styles.buttonAdd}
+          title="Add an Employee"
+          onPress={openEmployeeFormHandler}
+        />
         <View style={{ flex: 1, backgroundColor: "#fefefe" }}>
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -139,15 +165,6 @@ const Employees = () => {
     </SafeAreaView>
   );
 };
-
-// class Employees extends Component {
-//   async componentDidMount() {
-//     const data = await this.fetchData();
-//     this.setState({
-//       isLoading: false
-//     });
-//     this.populateSiteData(data.sites);
-//   }
 
 const styles = StyleSheet.create({
   container: {
