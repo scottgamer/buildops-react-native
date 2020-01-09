@@ -21,19 +21,15 @@ const Employees = props => {
     employees: []
   });
 
-  const [isActive, setActive] = useState(true);
-  const [isLoading, setLoading] = useState(true);
-  const [count, setCount] = useState(1);
+  const [isLoading, setLoading] = useState(null);
 
   useEffect(() => {
     fetchEmployees();
-    setActive(false);
-  }, [count]);
+  }, []);
 
   const fetchEmployees = async () => {
     try {
       setLoading(true);
-
       const requestBody = {
         query: `
             query {
@@ -73,16 +69,10 @@ const Employees = props => {
       }
 
       const employeesRes = response.data.data.employees;
-
-      if (isActive) {
-        setEmployees({ ...employees, employees: employeesRes });
-        setLoading(false);
-      }
+      setEmployees({ ...employees, employees: employeesRes });
+      setLoading(false);
     } catch (error) {
       console.log(error);
-      if (isActive) {
-        setLoading(false);
-      }
     }
   };
 
@@ -92,17 +82,18 @@ const Employees = props => {
     });
   };
 
-  const openEmployeeDetailsHandler = (item, index) => {
+  const openEmployeeDetailsHandler = item => {
     props.navigation.navigate("EmployeeDetails", {
-      employee: item
+      employee: item,
+      employees: employees.employees
     });
   };
 
-  const renderEmployee = ({ item, index }) => {
+  const renderEmployee = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          openEmployeeDetailsHandler(item, index);
+          openEmployeeDetailsHandler(item);
         }}
       >
         <View style={styles.employeeCard}>
@@ -121,8 +112,6 @@ const Employees = props => {
 
   const reloadHandler = async () => {
     await fetchEmployees();
-    console.log(count);
-    setCount(count + 1);
   };
 
   return (
@@ -140,14 +129,20 @@ const Employees = props => {
           onPress={openEmployeeFormHandler}
         />
         <View style={{ flex: 1, backgroundColor: "#fefefe" }}>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={employees.employees}
-            keyExtractor={employee => employee._id}
-            contentContainerStyle={styles.listLayout}
-            renderItem={renderEmployee}
-            extraData={employees.employees}
-          />
+          {isLoading ? (
+            <View style={styles.flexCenterAll}>
+              <Spinner size="giant" status="primary" />
+            </View>
+          ) : (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={employees.employees}
+              keyExtractor={employee => employee._id}
+              contentContainerStyle={styles.listLayout}
+              renderItem={renderEmployee}
+              extraData={employees.employees}
+            />
+          )}
         </View>
       </View>
       <Separator />
@@ -192,22 +187,10 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center"
   },
-  itemBgImage: {
-    height: "100%",
-    width: "25%"
-  },
-  nameAndAddressContainer: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    paddingLeft: 10,
-    marginRight: 7
-  },
-  itemNameText: { fontSize: 17, fontWeight: "bold", marginBottom: 15 },
   flexCenterAll: {
     display: "flex",
     width: "100%",
-    height: "100%",
+    height: "50%",
     alignItems: "center",
     justifyContent: "center"
   }
