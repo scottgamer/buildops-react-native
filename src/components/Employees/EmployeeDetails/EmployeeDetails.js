@@ -31,7 +31,7 @@ const EmployeeDetails = props => {
     skill: props.navigation.state.params.employee.skills[0].name
   };
 
-  const updateEmployeeHandler = async employee => {
+  const updateEmployeeHandler = async values => {
     const employeeId = props.navigation.state.params.employee._id;
     const addressId = props.navigation.state.params.employee.addresses[0]._id;
     const skillId = props.navigation.state.params.employee.skills[0]._id;
@@ -41,20 +41,20 @@ const EmployeeDetails = props => {
     mutation {
       updateEmployee(updateEmployeeInput: {
         _id:"${employeeId}", 
-        firstname: "${employee.firstname}"
-        lastname: "${employee.lastname}"
+        firstname: "${values.firstname}"
+        lastname: "${values.lastname}"
         addresses: [{
           _id:"${addressId}", 
-          line1: "${employee.line1}",
-          line2: "${employee.line2}",
-          city: "${employee.city}",
-          state: "${employee.state}",
-          zipcode:"${employee.zipCode}"
+          line1: "${values.line1}",
+          line2: "${values.line2}",
+          city: "${values.city}",
+          state: "${values.state}",
+          zipcode:"${values.zipcode}"
         }]
         skills: [
           {
             _id: "${skillId}"
-            name: "${employee.skill}"
+            name: "${values.skill}"
           }
         ]
       }) {
