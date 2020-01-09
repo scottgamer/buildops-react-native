@@ -77,15 +77,12 @@ const Employees = props => {
   };
 
   const openEmployeeFormHandler = () => {
-    props.navigation.navigate("EmployeeForm", {
-      employees: employees.employees
-    });
+    props.navigation.navigate("EmployeeForm");
   };
 
   const openEmployeeDetailsHandler = item => {
     props.navigation.navigate("EmployeeDetails", {
-      employee: item,
-      employees: employees.employees
+      employee: item
     });
   };
 
