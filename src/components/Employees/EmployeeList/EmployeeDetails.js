@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,10 +12,11 @@ import axios from "axios";
 import { Formik } from "formik";
 import EmployeeSchema from "../../../schemas/EmployeeSchema";
 
+import CONSTANTS from "../../../config/CONSTANTS";
+
 const EmployeeDetails = props => {
-  const [isEditable, setEditable] = useState(false);
-  const [employee, setEmployee] = useState({
-    ...props.navigation.state.params.employee
+  const [employee] = useState({
+    selectedEmployee: props.navigation.state.params.employee
   });
 
   const initialValues = {
@@ -35,14 +36,14 @@ const EmployeeDetails = props => {
     console.log(employeeId);
   };
 
-  const deleteEmployeHandler = async () => {
+  const deleteEmployeeHandler = async () => {
     try {
-      console.log(employee);
+      console.log(employee.selectedEmployee);
 
       const requestBody = {
         query: `
           mutation {
-            deleteEmployee(employeeId: "${employee._id}") {
+            deleteEmployee(employeeId: "${employee.selectedEmployee._id}") {
               _id
               firstname
               lastname 
@@ -52,7 +53,7 @@ const EmployeeDetails = props => {
       };
 
       const response = await axios.post(
-        `http://192.168.1.140:4000/graphql`,
+        `${CONSTANTS.API_URL}/graphql`,
         JSON.stringify(requestBody),
         {
           headers: {
@@ -65,38 +66,11 @@ const EmployeeDetails = props => {
         throw new Error("Failed!");
       }
 
-      props.navigation.goBack();
-
-      // const deletedEmployeeId = response.data.data.deleteEmployee._id;
-      // const currentEmployees = employees.employees;
-
-      // const updatedEmployees = currentEmployees.filter(e => {
-      //   return e._id !== deletedEmployeeId;
-      // });
-
-      // setEmployees({ ...employees, employees: updatedEmployees });
+      props.navigation.navigate("Employees");
     } catch (error) {
       console.log(error);
     }
   };
-
-  // useEffect(() => {
-  //   changeInitialValuesHandler();
-  // }, []);
-
-  // const changeInitialValuesHandler = () => {
-  //   console.log("change initial values handler");
-
-  //   if (
-  //     props.navigation.state.params &&
-  //     props.navigation.state.params.employee
-  //   ) {
-  //     const selectedEmployee = props.navigation.state.params.employee;
-  //     console.log("selectedEmployee", selectedEmployee);
-  //     setEmployee({ ...selectedEmployee });
-  //     console.log("selectedEmployee", employee);
-  //   }
-  // };
 
   return (
     <Formik
@@ -120,7 +94,8 @@ const EmployeeDetails = props => {
             >
               <View style={styles.container}>
                 <Text style={styles.containerHeader}>
-                  {employee.firstname} {employee.lastname}
+                  {employee.selectedEmployee.firstname}{" "}
+                  {employee.selectedEmployee.lastname}
                 </Text>
 
                 <View style={{ flex: 1, backgroundColor: "#fefefe" }}>
@@ -130,8 +105,7 @@ const EmployeeDetails = props => {
                       onBlur={handleBlur("firstname")}
                       value={values.firstname}
                       placeholder="First name"
-                      // editable={isEditable}
-                      defaultValue={employee.firstname}
+                      defaultValue={employee.selectedEmployee.firstname}
                     />
                     {errors.firstname && touched.firstname ? (
                       <Text style={styles.errorText}>{errors.firstname}</Text>
@@ -143,8 +117,7 @@ const EmployeeDetails = props => {
                       onBlur={handleBlur("lastname")}
                       value={values.lastname}
                       placeholder="Last name"
-                      // editable={isEditable}
-                      defaultValue={employee.lastname}
+                      defaultValue={employee.selectedEmployee.lastname}
                     />
                     {errors.lastname && touched.lastname ? (
                       <Text style={styles.errorText}>{errors.lastname}</Text>
@@ -156,8 +129,9 @@ const EmployeeDetails = props => {
                       onBlur={handleBlur("line1")}
                       value={values.line1}
                       placeholder="Line 1"
-                      // editable={isEditable}
-                      defaultValue={employee.addresses[0].line1}
+                      defaultValue={
+                        employee.selectedEmployee.addresses[0].line1
+                      }
                     />
                     {errors.line1 && touched.line1 ? (
                       <Text style={styles.errorText}>{errors.line1}</Text>
@@ -169,8 +143,9 @@ const EmployeeDetails = props => {
                       onBlur={handleBlur("line2")}
                       value={values.line2}
                       placeholder="Line 2"
-                      // editable={isEditable}
-                      defaultValue={employee.addresses[0].line2}
+                      defaultValue={
+                        employee.selectedEmployee.addresses[0].line2
+                      }
                     />
                     {errors.line2 && touched.line2 ? (
                       <Text style={styles.errorText}>{errors.line2}</Text>
@@ -182,8 +157,7 @@ const EmployeeDetails = props => {
                       onBlur={handleBlur("city")}
                       value={values.city}
                       placeholder="City"
-                      // editable={isEditable}
-                      defaultValue={employee.addresses[0].city}
+                      defaultValue={employee.selectedEmployee.addresses[0].city}
                     />
                     {errors.city && touched.city ? (
                       <Text style={styles.errorText}>{errors.city}</Text>
@@ -195,8 +169,9 @@ const EmployeeDetails = props => {
                       onBlur={handleBlur("state")}
                       value={values.state}
                       placeholder="State"
-                      // editable={isEditable}
-                      defaultValue={employee.addresses[0].state}
+                      defaultValue={
+                        employee.selectedEmployee.addresses[0].state
+                      }
                     />
                     {errors.state && touched.state ? (
                       <Text style={styles.errorText}>{errors.state}</Text>
@@ -208,8 +183,9 @@ const EmployeeDetails = props => {
                       onBlur={handleBlur("zipcode")}
                       value={values.zipcode}
                       placeholder="Zip code"
-                      // editable={isEditable}
-                      defaultValue={employee.addresses[0].zipcode}
+                      defaultValue={
+                        employee.selectedEmployee.addresses[0].zipcode
+                      }
                     />
                     {errors.zipcode && touched.zipcode ? (
                       <Text style={styles.errorText}>{errors.zipcode}</Text>
@@ -221,8 +197,7 @@ const EmployeeDetails = props => {
                       onBlur={handleBlur("skill")}
                       value={values.skill}
                       placeholder="Skill"
-                      // editable={isEditable}
-                      defaultValue={employee.skills[0].name}
+                      defaultValue={employee.selectedEmployee.skills[0].name}
                     />
                     {errors.skill && touched.skill ? (
                       <Text style={styles.errorText}>{errors.skill}</Text>
@@ -238,7 +213,7 @@ const EmployeeDetails = props => {
                     <Button onPress={handleSubmit} title="Update" />
                     <Button
                       color="red"
-                      onPress={deleteEmployeHandler}
+                      onPress={deleteEmployeeHandler}
                       title="Delete"
                     />
                   </View>
