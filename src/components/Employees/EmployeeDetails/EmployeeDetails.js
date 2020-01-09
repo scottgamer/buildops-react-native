@@ -31,10 +31,56 @@ const EmployeeDetails = props => {
     skill: props.navigation.state.params.employee.skills[0].name
   };
 
-  // TODO finish this method
-  const updateEmployeeHandler = (event, employeeId) => {
-    event.preventDefault();
-    console.log(employeeId);
+  const updateEmployeeHandler = async employee => {
+    const employeeId = props.navigation.state.params.employee._id;
+    const addressId = props.navigation.state.params.employee.addresses[0]._id;
+    const skillId = props.navigation.state.params.employee.skills[0]._id;
+
+    const requestBody = {
+      query: `
+    mutation {
+      updateEmployee(updateEmployeeInput: {
+        _id:"${employeeId}", 
+        firstname: "${employee.firstname}"
+        lastname: "${employee.lastname}"
+        addresses: [{
+          _id:"${addressId}", 
+          line1: "${employee.line1}",
+          line2: "${employee.line2}",
+          city: "${employee.city}",
+          state: "${employee.state}",
+          zipcode:"${employee.zipCode}"
+        }]
+        skills: [
+          {
+            _id: "${skillId}"
+            name: "${employee.skill}"
+          }
+        ]
+      }) {
+        _id
+        firstname
+        lastname
+      }
+    }
+    `
+    };
+
+    const response = await axios.post(
+      `${CONSTANTS.API_URL}/graphql`,
+      JSON.stringify(requestBody),
+      {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    if (response.status !== 200 && response.status !== 201) {
+      throw new Error("Failed!");
+    }
+
+    props.navigation.navigate("Employees");
   };
 
   const onConfirmDeleteHandler = () => {
@@ -51,8 +97,6 @@ const EmployeeDetails = props => {
 
   const deleteEmployeeHandler = async () => {
     try {
-      console.log(employee.selectedEmployee);
-
       const requestBody = {
         query: `
           mutation {
@@ -89,7 +133,7 @@ const EmployeeDetails = props => {
     <Formik
       initialValues={initialValues}
       validationSchema={EmployeeSchema}
-      onSubmit={values => console.log(values)}
+      onSubmit={values => updateEmployeeHandler(values)}
     >
       {({
         handleChange,
@@ -226,7 +270,6 @@ const EmployeeDetails = props => {
                     <Button onPress={handleSubmit} title="Update" />
                     <Button
                       color="red"
-                      // onPress={deleteEmployeeHandler}
                       onPress={onConfirmDeleteHandler}
                       title="Delete"
                     />
