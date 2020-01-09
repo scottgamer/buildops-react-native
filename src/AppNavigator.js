@@ -3,7 +3,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 
 import Employees from "./screens/Employees/Employees";
-import EmployeeDetails from "./components/Employees/EmployeeList/EmployeeDetails";
+import EmployeeDetails from "./components/Employees/EmployeeDetails/EmployeeDetails";
 import EmployeeForm from "./components/Employees/EmployeeForm/EmployeeForm";
 import Header from "./components/Header/Header";
 

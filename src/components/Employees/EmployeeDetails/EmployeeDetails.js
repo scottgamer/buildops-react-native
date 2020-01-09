@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import {
+  Alert,
   View,
   Text,
   TextInput,
   StyleSheet,
   ScrollView,
-  Button,
-  Modal,
-  TouchableHighlight
+  Button
 } from "react-native";
 
 import axios from "axios";
@@ -20,8 +19,6 @@ const EmployeeDetails = props => {
   const [employee] = useState({
     selectedEmployee: props.navigation.state.params.employee
   });
-
-  const [isModalVisible, setModalVisible] = useState(false);
 
   const initialValues = {
     firstname: props.navigation.state.params.employee.firstname,
@@ -38,6 +35,18 @@ const EmployeeDetails = props => {
   const updateEmployeeHandler = (event, employeeId) => {
     event.preventDefault();
     console.log(employeeId);
+  };
+
+  const onConfirmDeleteHandler = () => {
+    Alert.alert(
+      "Delete Employee",
+      "Are you sure you want to delete employee? ",
+      [
+        { text: "Delete", onPress: () => deleteEmployeeHandler() },
+        { text: "Cancel", onPress: () => {}, style: "cancel" }
+      ],
+      { cancelable: true }
+    );
   };
 
   const deleteEmployeeHandler = async () => {
@@ -92,51 +101,6 @@ const EmployeeDetails = props => {
       }) => {
         return (
           <React.Fragment>
-            {/* <Modal
-              animationType="fade"
-              transparent={false}
-              visible={isModalVisible}
-              onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-              }}
-            >
-              <View
-                style={{
-                  flex: 1,
-                  width: "100%",
-                  height: 90,
-                  padding: 8,
-                  marginBottom: 10,
-                  borderRadius: 3,
-                  borderColor: "black",
-                  backgroundColor: "#fff",
-                  shadowColor: "black",
-                  shadowOffset: { width: 0, height: 0.75 },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 1,
-                  elevation: 2,
-                  alignContent: "center",
-                  justifyContent: "center"
-                }}
-              >
-                <View>
-                  <Text>
-                    Are you sure you want to delete employee:{" "}
-                    {employee.selectedEmployee.firstname}{" "}
-                    {employee.selectedEmployee.lastname}
-                  </Text>
-                </View>
-                <View>
-                  <TouchableHighlight
-                    onPress={() => {
-                      console.log("modal pressed");
-                    }}
-                  >
-                    <Text>Hide Modal</Text>
-                  </TouchableHighlight>
-                </View>
-              </View>
-            </Modal> */}
             <ScrollView
               showsVerticalScrollIndicator
               style={{ flex: 1, backgroundColor: "#fff" }}
@@ -263,7 +227,7 @@ const EmployeeDetails = props => {
                     <Button
                       color="red"
                       // onPress={deleteEmployeeHandler}
-                      onPress={setModalVisible(true)}
+                      onPress={onConfirmDeleteHandler}
                       title="Delete"
                     />
                   </View>
