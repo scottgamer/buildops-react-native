@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Text,
@@ -10,7 +10,9 @@ import {
 
 import axios from "axios";
 import { Formik } from "formik";
+
 import EmployeeSchema from "../../../schemas/EmployeeSchema";
+import CONSTANTS from "../../../config/CONSTANTS";
 
 export const EmployeeForm = props => {
   const initialValues = {
@@ -27,19 +29,6 @@ export const EmployeeForm = props => {
   const [employees, setEmployees] = useState(
     props.navigation.state.params.employees
   );
-
-  // TODO: handle list of user refresh
-
-  // useEffect(() => {
-  //   setInitialData();
-  // }, []);
-
-  // const setInitialData = () => {
-  //   setEmployees({
-  //     ...employees,
-  //     employees: props.navigation.state.params.employees
-  //   });
-  // };
 
   const createEmployeeHandler = async values => {
     try {
@@ -76,7 +65,7 @@ export const EmployeeForm = props => {
       };
 
       const response = await axios.post(
-        `http://192.168.1.140:4000/graphql`,
+        `${CONSTANTS.API_URL}/graphql`,
         JSON.stringify(requestBody),
         {
           headers: {
@@ -92,15 +81,10 @@ export const EmployeeForm = props => {
       const updatedEmployees = [...employees];
       updatedEmployees.push(response.data.data.createEmployee);
 
-      // props.navigation.navigate("Employees", {
-      //   employees: updatedEmployees
-      // });
-
-      // props.navigation.navigate("Employees", {
-      //   refresh: true
-      // });
-
-      // props.navigation.goBack();
+      setEmployees([...updatedEmployees]);
+      props.navigation.navigate("Employees", {
+        employees: updatedEmployees
+      });
     } catch (error) {
       console.log(error);
     }
