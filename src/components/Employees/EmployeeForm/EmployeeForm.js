@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Button,
   Text,
@@ -25,10 +25,6 @@ export const EmployeeForm = props => {
     zipcode: "",
     skill: ""
   };
-
-  const [employees, setEmployees] = useState(
-    props.navigation.state.params.employees
-  );
 
   const createEmployeeHandler = async values => {
     try {
@@ -78,13 +74,7 @@ export const EmployeeForm = props => {
         throw new Error("Failed!");
       }
 
-      const updatedEmployees = [...employees];
-      updatedEmployees.push(response.data.data.createEmployee);
-
-      setEmployees([...updatedEmployees]);
-      props.navigation.navigate("Employees", {
-        employees: updatedEmployees
-      });
+      props.navigation.navigate("Employees");
     } catch (error) {
       console.log(error);
     }
