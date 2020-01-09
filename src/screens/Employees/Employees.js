@@ -10,25 +10,16 @@ import {
   Button
 } from "react-native";
 
+import axios from "axios";
 import Separator from "../../components/Separator/Separator";
 import { Spinner } from "react-native-ui-kitten";
 
-import axios from "axios";
+import CONSTANTS from "../../config/CONSTANTS";
 
 const Employees = props => {
   const [employees, setEmployees] = useState({
-    employees: [],
-    selectedEmployee: null
+    employees: []
   });
-
-  // let refresh = false;
-  // if (props.navigation.state.params && props.navigation.state.params.refresh) {
-  //   refresh = props.navigation.state.params.refresh;
-  // }
-  // console.log("navigation state", props.navigation.state);
-  // console.log("refresh", refresh);
-
-  // const refresh = props.navigation.state.params.employees ??
 
   const [isActive, setActive] = useState(true);
   const [isLoading, setLoading] = useState(true);
@@ -37,13 +28,11 @@ const Employees = props => {
   useEffect(() => {
     fetchEmployees();
     setActive(false);
-    // setCount(1);
-    // refresh = false;
   }, [count]);
 
   const fetchEmployees = async () => {
     try {
-      // setLoading(true);
+      setLoading(true);
 
       const requestBody = {
         query: `
@@ -70,7 +59,7 @@ const Employees = props => {
       };
 
       const response = await axios.post(
-        `http://192.168.1.140:4000/graphql`,
+        `${CONSTANTS.API_URL}/graphql`,
         JSON.stringify(requestBody),
         {
           headers: {
@@ -87,12 +76,12 @@ const Employees = props => {
 
       if (isActive) {
         setEmployees({ ...employees, employees: employeesRes });
-        // setLoading(false);
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
       if (isActive) {
-        // setLoading(false);
+        setLoading(false);
       }
     }
   };
