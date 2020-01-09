@@ -1,5 +1,5 @@
 const CONSTANTS = {
-  API_URL: "http://192.168.100.107:4000"
+  API_URL: "http://54.158.28.196"
 };
 
 export default CONSTANTS;
